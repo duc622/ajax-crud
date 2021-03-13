@@ -11,11 +11,8 @@ if (isset($_POST['getId'])) {
   $id = $_POST['getId'];
   $query = "SELECT * FROM `user` where id=$id";
   $result = mysqli_query($conn, $query);
-  $res = array();
-  while ($row = mysqli_fetch_assoc($result)) {
-    $res = $row;
-  }
-  echo json_encode($res);
+  $row = mysqli_fetch_array($result);
+  echo json_encode($row);
 }
 //delete
 if (isset($_POST['deleteId'])) {
@@ -25,33 +22,13 @@ if (isset($_POST['deleteId'])) {
 }
 //select
 if (isset($_POST['readrecord'])) {
-  $data = '<table class="table table-bordered table-striped">
-            <tr>
-              <th>ID</th>
-              <th>first name</th>
-              <th>last name</th>
-              <th>email</th>
-              <th>mobile</th>
-              <th>edit</th>
-              <th>delete</th>
-            </tr>';
   $query = "SELECT * FROM `user` order by id desc";
   $result = mysqli_query($conn, $query);
-  if (mysqli_num_rows($result) > 0) {
-    while ($row = mysqli_fetch_array($result)) {
-      $data .= '<tr>
-                  <th>' . $row['id'] . '</th>
-                  <th>' . $row['firstname'] . '</th>
-                  <th>' . $row['lastname'] . '</th>
-                  <th>' . $row['email'] . '</th>
-                  <th>' . $row['mobile'] . '</th>  
-                  <th><button data-toggle="modal" data-target="#updateModal" onclick="getUser(' . $row['id'] . ')" class="btn btn-warning">Edit</button></th>
-                  <th><button onclick="deleteUser(' . $row['id'] . ')" class="btn btn-danger">Delete</button></th>              
-                </tr>';
-    }
-    $data .= "</table>";
-    echo $data;
+  $data = array();
+  while ($row = mysqli_fetch_array($result)) {
+    array_push($data, $row);
   }
+  echo json_encode($data);
 }
 //insert
 if (isset($_POST['firstname']) && isset($_POST['lastname'])  && isset($_POST['email']) && isset($_POST['mobile'])) {

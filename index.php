@@ -19,7 +19,21 @@
       </button>
     </div>
     <h2 class="text-danger">All records</h2>
-    <div id="records_content"></div>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>first name</th>
+          <th>last name</th>
+          <th>email</th>
+          <th>mobile</th>
+          <th>edit</th>
+          <th>delete</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
     <!-- The Modal -->
     <div class="modal" id="myModal">
       <div class="modal-dialog">
@@ -181,7 +195,20 @@
         readrecord: readrecord
       },
       success: (data) => {
-        $('#records_content').html(data)
+        data = JSON.parse(data)
+        dataa = ``;
+        data.map((val) => {
+          dataa += `<tr>
+                   <th>${val['id']}</th>
+                   <th>${val['firstname']}</th>
+                   <th>${val['lastname']}</th>
+                   <th>${val['email']}</th>
+                   <th>${val['mobile']}</th>  
+                   <th><button data-toggle="modal" data-target="#updateModal" onclick="getUser(${val['id']})" class="btn btn-warning">Edit</button></th>
+                   <th><button onclick="deleteUser(${val['id']})" class="btn btn-danger">Delete</button></th>              
+                 </tr>`;
+        })
+        $('tbody').html(dataa)
       }
     })
 
