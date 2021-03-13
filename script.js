@@ -1,8 +1,47 @@
 page = 1;
-readRecords(1); //default
-loadPagination();
+val = "";
 totalPage = 0;
+search(val, page);
+loadPagination(val);
+
 $(`#page-item1`).addClass("btn-primary");
+
+function getValAndSearch() {
+  val = $("#search").val();
+  search(val, 1);
+  loadPagination(val);
+}
+function search(key, pagee) {
+  page = pagee;
+  $.ajax({
+    url: "backend.php",
+    type: "post",
+    data: {
+      page: pagee,
+      key: key,
+    },
+    success: (data) => {
+      console.log(data);
+      data = JSON.parse(data);
+      dataa = ``;
+      data.map((val) => {
+        dataa += `<tr>
+                   <th>${val["id"]}</th>
+                   <th>${val["firstname"]}</th>
+                   <th>${val["lastname"]}</th>
+                   <th>${val["email"]}</th>
+                   <th>${val["mobile"]}</th>
+                   <th><button data-toggle="modal" 
+                   data-target="#updateModal" onclick="getUser(${val["id"]})" 
+                   class="btn btn-warning">Edit</button></th>
+                   <th><button onclick="deleteUser(${val["id"]})" class="btn btn-danger">Delete</button></th>
+                 </tr>`;
+      });
+      $("tbody").html(dataa);
+    },
+  });
+}
+
 function updateUser() {
   const update_id = $("#hidden_id").val();
   const update_firstname = $("#update_firstname").val();
@@ -20,8 +59,24 @@ function updateUser() {
       update_mobile: update_mobile,
     },
     success: function (data, status) {
-      readRecords(page);
-      loadPagination();
+      search("", 1);
+      loadPagination("");
+      $("#al").html(`
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          Update success
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+     `);
     },
   });
 }
@@ -36,8 +91,24 @@ function deleteUser(deleteId) {
         deleteId: deleteId,
       },
       success: function (data, status) {
-        readRecords(page);
-        loadPagination();
+        search("", 1);
+        loadPagination("");
+        $("#al").html(`
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            Delete success
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        `);
       },
     });
 }
@@ -61,53 +132,27 @@ function getUser(id) {
   });
 }
 
-function loadPagination() {
+function loadPagination(key) {
   $.ajax({
     url: "backend.php",
     type: "post",
     data: {
       pagination: "pagination",
+      key: key,
     },
     success: (data) => {
       output = "";
+      console.log(data);
       for (let i = 1; i <= data; i++) {
-        output += `<button id="page-item${i}" class="btn m-1" onclick="readRecords(${i});loadPagination()">${i}</button>`;
+        output += `<button id="page-item${i}" class="btn m-1" 
+        onclick="search('${key}', ${i});loadPagination('${key}')">${i}</button>`;
       }
       $(".pagination").html(output);
-      totalPage = data;
-      for (let i = 1; i <= totalPage; i++)
+      for (let i = 1; i <= data; i++)
         $(`#page-item${i}`).removeClass("btn-primary");
 
       $(`#page-item${page}`).addClass("btn-primary");
       console.log(page);
-    },
-  });
-}
-
-function readRecords(pagee) {
-  page = pagee;
-  $.ajax({
-    url: "backend.php",
-    type: "post",
-    data: {
-      readRecord: "readRecord",
-      page: pagee,
-    },
-    success: (data) => {
-      data = JSON.parse(data);
-      dataa = ``;
-      data.map((val) => {
-        dataa += `<tr>
-                   <th>${val["id"]}</th>
-                   <th>${val["firstname"]}</th>
-                   <th>${val["lastname"]}</th>
-                   <th>${val["email"]}</th>
-                   <th>${val["mobile"]}</th>
-                   <th><button data-toggle="modal" data-target="#updateModal" onclick="getUser(${val["id"]})" class="btn btn-warning">Edit</button></th>
-                   <th><button onclick="deleteUser(${val["id"]})" class="btn btn-danger">Delete</button></th>
-                 </tr>`;
-      });
-      $("tbody").html(dataa);
     },
   });
 }
@@ -131,8 +176,24 @@ function addRecord() {
       mobile: mobile,
     },
     success: () => {
-      readRecords(1);
-      loadPagination();
+      search("", 1);
+      loadPagination("");
+      $("#al").html(`
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          Add success
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      `);
     },
   });
 }

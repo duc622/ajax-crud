@@ -17,8 +17,14 @@
       <button class="btn btn-warning" data-toggle="modal" data-target="#myModal">
         Add user
       </button>
+      <div class="form-inline my-2 my-lg-0">
+        <input id="search" class="form-control mr-sm-2 ml-2" type="text" placeholder="Search">
+        <button onclick="getValAndSearch()" class="btn btn-outline-primary my-2 my-sm-0" type="submit">🔍</button>
+      </div>
     </div>
     <h2 class="text-danger">All records</h2>
+    <div id="al"></div>
+
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -131,4 +137,3 @@
 </body>
 
 </html>
-<span></span>
