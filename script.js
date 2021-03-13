@@ -1,8 +1,8 @@
 page = 1;
-readRecords(page); //default
+readRecords(1); //default
 loadPagination();
 totalPage = 0;
-$("#page-item1").addClass("btn-primary");
+$(`#page-item1`).addClass("btn-primary");
 function updateUser() {
   const update_id = $("#hidden_id").val();
   const update_firstname = $("#update_firstname").val();
@@ -70,17 +70,22 @@ function loadPagination() {
     },
     success: (data) => {
       output = "";
-      console.log(data);
       for (let i = 1; i <= data; i++) {
-        output += `<button id="page-item${i}" class="btn m-1" onclick="readRecords(${i})">${i}</button>`;
+        output += `<button id="page-item${i}" class="btn m-1" onclick="readRecords(${i});loadPagination()">${i}</button>`;
       }
       $(".pagination").html(output);
       totalPage = data;
+      for (let i = 1; i <= totalPage; i++)
+        $(`#page-item${i}`).removeClass("btn-primary");
+
+      $(`#page-item${page}`).addClass("btn-primary");
+      console.log(page);
     },
   });
 }
 
 function readRecords(pagee) {
+  page = pagee;
   $.ajax({
     url: "backend.php",
     type: "post",
@@ -103,12 +108,6 @@ function readRecords(pagee) {
                  </tr>`;
       });
       $("tbody").html(dataa);
-
-      for (let i = 1; i <= totalPage; i++)
-        $(`#page-item${i}`).removeClass("btn-primary");
-      page = pagee;
-      $(`#page-item${page}`).addClass("btn-primary");
-      console.log(data);
     },
   });
 }
@@ -118,6 +117,10 @@ function addRecord() {
   const lastname = $("#lastname").val();
   const email = $("#email").val();
   const mobile = $("#mobile").val();
+  $("#firstname").val("");
+  $("#lastname").val("");
+  $("#email").val("");
+  $("#mobile").val("");
   $.ajax({
     url: "backend.php",
     type: "post",
@@ -128,7 +131,7 @@ function addRecord() {
       mobile: mobile,
     },
     success: () => {
-      readRecords(page);
+      readRecords(1);
       loadPagination();
     },
   });
