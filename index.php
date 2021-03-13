@@ -160,7 +160,7 @@
       data: {
         getId: getId
       },
-      success: function(data, status) {
+      success: (data, status) => {
         const user = JSON.parse(data)
         $("#hidden_id").val(user.id)
         $("#update_firstname").val(user.firstname)
@@ -180,10 +180,11 @@
       data: {
         readrecord: readrecord
       },
-      success: function(data, status) {
+      success: (data) => {
         $('#records_content').html(data)
       }
     })
+
   }
 
   function addRecord() {
@@ -200,7 +201,7 @@
         email: email,
         mobile: mobile,
       },
-      success: function(data, status) {
+      success: () => {
         readReadcords();
       }
     });
