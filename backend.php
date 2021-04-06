@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect('localhost', 'root', '', 'ajax_crud');
+$conn = mysqli_connect('pxukqohrckdfo4ty.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306', 'ru47msmzp4t19vj3', 'be9h3922cn8lrav9', 'z4zrvozudp2xxjls');
 extract($_POST);
 $perPage = 3;
 //search limit
