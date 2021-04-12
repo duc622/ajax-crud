@@ -82,8 +82,8 @@ function updateUser() {
 }
 
 function deleteUser(deleteId) {
-  const cofirm = confirm("Are you sure");
-  if (confirm)
+  const conf = confirm("Are you sure");
+  if (conf)
     $.ajax({
       url: "backend.php",
       type: "post",
